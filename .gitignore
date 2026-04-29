@@ -1,0 +1,17 @@
+
+# Simulink/MATLAB generated files
+slprj/
+codegen/
+*.slxc
+*.asv
+*.m~
+*.autosave
+
+# Code generation output, if you can regenerate it
+*_ert_rtw/
+*_grt_rtw/
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+.vscode/
