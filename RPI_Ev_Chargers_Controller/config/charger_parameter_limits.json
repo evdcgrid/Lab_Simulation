@@ -13,13 +13,13 @@
       "step": 1.0
     },
     "charge_current_limit_a": {
-      "default": 16.0,
+      "default": 10.0,
       "min": 0.0,
       "max": 300.0,
       "step": 0.5
     },
     "discharge_current_limit_a": {
-      "default": 16.0,
+      "default": 10.0,
       "min": 0.0,
       "max": 300.0,
       "step": 0.5
@@ -49,11 +49,11 @@
         "max": 500.0
       },
       "charge_current_limit_a": {
-        "default": 16.0,
+        "default": 10.0,
         "max": 300.0
       },
       "discharge_current_limit_a": {
-        "default": 16.0,
+        "default": 10.0,
         "max": 300.0
       }
     },
@@ -68,11 +68,11 @@
         "max": 500.0
       },
       "charge_current_limit_a": {
-        "default": 16.0,
+        "default": 10.0,
         "max": 300.0
       },
       "discharge_current_limit_a": {
-        "default": 16.0,
+        "default": 10.0,
         "max": 300.0
       }
     }

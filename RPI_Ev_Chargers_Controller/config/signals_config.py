@@ -1,232 +1,61 @@
-# config/signals_config.py
-from .constants import STAND_BY, POWER_ON, CHARGING, VOLTAGE_CNTRL, POWER_CNTRL
+from __future__ import annotations
 
-# Tabelas de sinais por nó. Cada entrada "N0X" é usada pelo MessageSender
-# para construir as mensagens RPDO/HB de arranque.
-signals = {
-    "N01": {
-        "HB_boot": {"N01_MasterStatus": 0},
-        "HB_on":   {"N01_MasterStatus": 5},
+from .can_startup_defaults import can_startup_value, parameter_fallback
+from .constants import CHARGING, FAULT_ACK, POWER_ON, STAND_BY
+from .hmi_parameter_defaults import parameter_default
 
-        "RPDO0": {
-            "standby": {
-                "N01_itfc_pfc_state_request": STAND_BY,
-                "N01_itfc_pfc_mode_request": POWER_CNTRL,
-                "N01_itfc_conf_request": 5,                 # CONF_DCDC
-                "N01_itfc_v2l_frequency_setpoint": 50,
-                "N01_itfc_v2l_voltage_setpoint": 230,
-                "N01_itfc_output_voltage_setpoint": 450,
-            },
-            "power_on": {
-                "N01_itfc_pfc_state_request": POWER_ON,
-                "N01_itfc_pfc_mode_request": POWER_CNTRL,
-                "N01_itfc_conf_request": 5,
-                "N01_itfc_v2l_frequency_setpoint": 50,
-                "N01_itfc_v2l_voltage_setpoint": 230,
-                "N01_itfc_output_voltage_setpoint": 450,
-            },
-            "charging": {
-                "N01_itfc_pfc_state_request": CHARGING,
-                "N01_itfc_pfc_mode_request": POWER_CNTRL,
-                "N01_itfc_conf_request": 5,
-                "N01_itfc_v2l_frequency_setpoint": 50,
-                "N01_itfc_v2l_voltage_setpoint": 230,
-                "N01_itfc_output_voltage_setpoint": 500,
-            },
-        },
 
-        "RPDO1": {
-            "N01_itfc_i_charge_limit": 10,
-            "N01_itfc_i_discharge_limit": 10,
-            "N01_itfc_active_power_setpoint_W": 1000,
-            "N01_itfc_reactive_power_setpoint_VAR": 0,
-        },
-
-        "RPDO2": {
-            "N01_itfc_i_L1_limit": 180,
-            "N01_itfc_i_L2_limit": 180,
-            "N01_itfc_i_L3_limit": 180,
-        },
-    },
-
-    "N02": {
-        "HB_boot": {"N02_MasterStatus": 0},
-        "HB_on":   {"N02_MasterStatus": 5},
-
-        "RPDO0": {
-            "standby": {
-                "N02_itfc_pfc_state_request": STAND_BY,
-                "N02_itfc_pfc_mode_request": POWER_CNTRL,
-                "N02_itfc_conf_request": 5,                
-                "N02_itfc_v2l_frequency_setpoint": 50,
-                "N02_itfc_v2l_voltage_setpoint": 230,
-                "N02_itfc_output_voltage_setpoint": 350,
-            },
-            "power_on": {
-                "N02_itfc_pfc_state_request": POWER_ON,
-                "N02_itfc_pfc_mode_request": POWER_CNTRL,
-                "N02_itfc_conf_request": 5,
-                "N02_itfc_v2l_frequency_setpoint": 50,
-                "N02_itfc_v2l_voltage_setpoint": 230,
-                "N02_itfc_output_voltage_setpoint": 350,
-            },
-            "charging": {
-                "N02_itfc_pfc_state_request": CHARGING,
-                "N02_itfc_pfc_mode_request": POWER_CNTRL,
-                "N02_itfc_conf_request": 5,
-                "N02_itfc_v2l_frequency_setpoint": 50,
-                "N02_itfc_v2l_voltage_setpoint": 230,
-                "N02_itfc_output_voltage_setpoint": 350,
-            },
-        },
-
-        "RPDO1": {
-            "N02_itfc_i_charge_limit": 30,
-            "N02_itfc_i_discharge_limit": 30,
-            "N02_itfc_active_power_setpoint_W": 0000,
-            "N02_itfc_reactive_power_setpoint_VAR": 0,
-        },
-
-        "RPDO2": {
-            "N02_itfc_i_L1_limit": 180,
-            "N02_itfc_i_L2_limit": 180,
-            "N02_itfc_i_L3_limit": 180,
-        },
-    },
-
-    
-    "N03": {
-        "HB_boot": {"N03_MasterStatus": 0},
-        "HB_on":   {"N03_MasterStatus": 5},
-
-        "RPDO0": {
-            "standby": {
-                "N03_itfc_pfc_state_request": STAND_BY,
-                "N03_itfc_pfc_mode_request": POWER_CNTRL,
-                "N03_itfc_conf_request": 5,
-                "N03_itfc_v2l_frequency_setpoint": 50,
-                "N03_itfc_v2l_voltage_setpoint": 230,
-                "N03_itfc_output_voltage_setpoint": 150,
-            },
-            "power_on": {
-                "N03_itfc_pfc_state_request": POWER_ON,
-                "N03_itfc_pfc_mode_request": POWER_CNTRL,
-                "N03_itfc_conf_request": 5,
-                "N03_itfc_v2l_frequency_setpoint": 50,
-                "N03_itfc_v2l_voltage_setpoint": 230,
-                "N03_itfc_output_voltage_setpoint": 150,
-            },
-            "charging": {
-                "N03_itfc_pfc_state_request": CHARGING,
-                "N03_itfc_pfc_mode_request": POWER_CNTRL,
-                "N03_itfc_conf_request": 5,
-                "N03_itfc_v2l_frequency_setpoint": 50,
-                "N03_itfc_v2l_voltage_setpoint": 230,
-                "N03_itfc_output_voltage_setpoint": 500,
-            },
-        },
-
-        "RPDO1": {
-            "N03_itfc_i_charge_limit": 30,
-            "N03_itfc_i_discharge_limit": 30,
-            "N03_itfc_active_power_setpoint_W": -100,
-            "N03_itfc_reactive_power_setpoint_VAR": 0,
-        },
-
-        "RPDO2": {
-            "N03_itfc_i_L1_limit": 180,
-            "N03_itfc_i_L2_limit": 180,
-            "N03_itfc_i_L3_limit": 180,
-        },
-    },
-
-    "N04": {
-        "HB_boot": {"N04_MasterStatus": 0},
-        "HB_on":   {"N04_MasterStatus": 5},
-
-        "RPDO0": {
-            "standby": {
-                "N04_itfc_pfc_state_request": STAND_BY,
-                "N04_itfc_pfc_mode_request": POWER_CNTRL,
-                "N04_itfc_conf_request": 5,
-                "N04_itfc_v2l_frequency_setpoint": 50,
-                "N04_itfc_v2l_voltage_setpoint": 230,
-                "N04_itfc_output_voltage_setpoint": 150,
-            },
-            "power_on": {
-                "N04_itfc_pfc_state_request": POWER_ON,
-                "N04_itfc_pfc_mode_request": POWER_CNTRL,
-                "N04_itfc_conf_request": 5,
-                "N04_itfc_v2l_frequency_setpoint": 50,
-                "N04_itfc_v2l_voltage_setpoint": 230,
-                "N04_itfc_output_voltage_setpoint": 150,
-            },
-            "charging": {
-                "N04_itfc_pfc_state_request": CHARGING,
-                "N04_itfc_pfc_mode_request": POWER_CNTRL,
-                "N04_itfc_conf_request": 5,
-                "N04_itfc_v2l_frequency_setpoint": 50,
-                "N04_itfc_v2l_voltage_setpoint": 230,
-                "N04_itfc_output_voltage_setpoint": 150,
-            },
-        },
-
-        "RPDO1": {
-            "N04_itfc_i_charge_limit": 30,
-            "N04_itfc_i_discharge_limit": 30,
-            "N04_itfc_active_power_setpoint_W": 0000,
-            "N04_itfc_reactive_power_setpoint_VAR": 0,
-        },
-
-        "RPDO2": {
-            "N04_itfc_i_L1_limit": 180,
-            "N04_itfc_i_L2_limit": 180,
-            "N04_itfc_i_L3_limit": 180,
-        },
-    },
-
-    "N05": {
-        "HB_boot": {"N05_MasterStatus": 0},
-        "HB_on":   {"N05_MasterStatus": 5},
-
-        "RPDO0": {
-            "standby": {
-                "N05_itfc_pfc_state_request": STAND_BY,
-                "N05_itfc_pfc_mode_request": VOLTAGE_CNTRL,
-                "N05_itfc_conf_request": 4,
-                "N05_itfc_v2l_frequency_setpoint": 50,
-                "N05_itfc_v2l_voltage_setpoint": 230,
-                "N05_itfc_output_voltage_setpoint": 150,
-            },
-            "power_on": {
-                "N05_itfc_pfc_state_request": POWER_ON,
-                "N05_itfc_pfc_mode_request": VOLTAGE_CNTRL,
-                "N05_itfc_conf_request": 4,
-                "N05_itfc_v2l_frequency_setpoint": 50,
-                "N05_itfc_v2l_voltage_setpoint": 230,
-                "N05_itfc_output_voltage_setpoint": 350,
-            },
-            "charging": {
-                "N05_itfc_pfc_state_request": CHARGING,
-                "N05_itfc_pfc_mode_request": VOLTAGE_CNTRL,
-                "N05_itfc_conf_request": 4,
-                "N05_itfc_v2l_frequency_setpoint": 50,
-                "N05_itfc_v2l_voltage_setpoint": 230,
-                "N05_itfc_output_voltage_setpoint": 350,
-            },
-        },
-
-        "RPDO1": {
-            "N05_itfc_i_charge_limit": 300,
-            "N05_itfc_i_discharge_limit": 300,
-            "N05_itfc_active_power_setpoint_W": 1000,
-            "N05_itfc_reactive_power_setpoint_VAR": 0,
-        },
-
-        "RPDO2": {
-            "N05_itfc_i_L1_limit": 180,
-            "N05_itfc_i_L2_limit": 180,
-            "N05_itfc_i_L3_limit": 180,
-        },
-    },
+NODES = ("N01", "N02", "N03", "N04", "N05")
+STATE_VALUES = {
+    "standby": STAND_BY,
+    "power_on": POWER_ON,
+    "charging": CHARGING,
+    "fault_ack": FAULT_ACK,
 }
+
+
+def _parameter(node: str, key: str) -> float:
+    return parameter_default(node, key, parameter_fallback(node, key))
+
+
+def _rpdo0(node: str, state: int) -> dict[str, float | int]:
+    return {
+        f"{node}_itfc_pfc_state_request": state,
+        f"{node}_itfc_pfc_mode_request": can_startup_value(node, "pfc_mode_request"),
+        f"{node}_itfc_conf_request": can_startup_value(node, "conf_request"),
+        f"{node}_itfc_v2l_frequency_setpoint": can_startup_value(node, "v2l_frequency_setpoint"),
+        f"{node}_itfc_v2l_voltage_setpoint": can_startup_value(node, "v2l_voltage_setpoint"),
+        f"{node}_itfc_output_voltage_setpoint": _parameter(node, "target_voltage_v"),
+    }
+
+
+def _rpdo1(node: str) -> dict[str, float | int]:
+    return {
+        f"{node}_itfc_i_charge_limit": _parameter(node, "charge_current_limit_a"),
+        f"{node}_itfc_i_discharge_limit": _parameter(node, "discharge_current_limit_a"),
+        f"{node}_itfc_active_power_setpoint_W": _parameter(node, "requested_power_kw") * 1000.0,
+        f"{node}_itfc_reactive_power_setpoint_VAR": can_startup_value(node, "reactive_power_setpoint_var"),
+    }
+
+
+def _rpdo2(node: str) -> dict[str, float | int]:
+    limit = can_startup_value(node, "phase_current_limit_a")
+    return {
+        f"{node}_itfc_i_L1_limit": limit,
+        f"{node}_itfc_i_L2_limit": limit,
+        f"{node}_itfc_i_L3_limit": limit,
+    }
+
+
+def _node_signals(node: str) -> dict:
+    return {
+        "HB_boot": {f"{node}_MasterStatus": 0},
+        "HB_on": {f"{node}_MasterStatus": 5},
+        "RPDO0": {name: _rpdo0(node, state) for name, state in STATE_VALUES.items()},
+        "RPDO1": _rpdo1(node),
+        "RPDO2": _rpdo2(node),
+    }
+
+
+# Public table used by the CAN sender, old GUI and ZMQ command server.
+signals = {node: _node_signals(node) for node in NODES}

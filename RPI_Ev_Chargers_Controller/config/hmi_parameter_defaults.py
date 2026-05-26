@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import os
-from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -26,38 +25,6 @@ def parameter_default(charger_id: str, parameter: str, fallback: float) -> float
     if value is None:
         value = _get_parameter_value(config.get("defaults"), parameter)
     return fallback if value is None else value
-
-
-def apply_hmi_defaults(charger_id: str, rpdo0: dict[str, Any], rpdo1: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
-    rpdo0 = deepcopy(rpdo0)
-    rpdo1 = deepcopy(rpdo1)
-
-    target_voltage = parameter_default(
-        charger_id,
-        "target_voltage_v",
-        float(rpdo0.get(f"{charger_id}_itfc_output_voltage_setpoint", 0)),
-    )
-    requested_power_kw = parameter_default(
-        charger_id,
-        "requested_power_kw",
-        float(rpdo1.get(f"{charger_id}_itfc_active_power_setpoint_W", 0)) / 1000.0,
-    )
-    charge_current = parameter_default(
-        charger_id,
-        "charge_current_limit_a",
-        float(rpdo1.get(f"{charger_id}_itfc_i_charge_limit", 0)),
-    )
-    discharge_current = parameter_default(
-        charger_id,
-        "discharge_current_limit_a",
-        float(rpdo1.get(f"{charger_id}_itfc_i_discharge_limit", 0)),
-    )
-
-    rpdo0[f"{charger_id}_itfc_output_voltage_setpoint"] = target_voltage
-    rpdo1[f"{charger_id}_itfc_active_power_setpoint_W"] = requested_power_kw * 1000.0
-    rpdo1[f"{charger_id}_itfc_i_charge_limit"] = charge_current
-    rpdo1[f"{charger_id}_itfc_i_discharge_limit"] = discharge_current
-    return rpdo0, rpdo1
 
 
 def _parameter_config_path() -> Path:

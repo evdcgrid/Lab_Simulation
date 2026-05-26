@@ -1,5 +1,4 @@
 import time
-from config.hmi_parameter_defaults import apply_hmi_defaults
 from config.signals_config import signals
 
 
@@ -47,16 +46,11 @@ class MessageSender:
                 continue
 
             cfg = signals[node]
-            rpdo0_standby, rpdo1 = apply_hmi_defaults(
-                node,
-                cfg["RPDO0"]["standby"],
-                cfg["RPDO1"],
-            )
 
             # RPDO0 → TODOS (estado)
             iface.send_message(
                 f"{node}_RPDO0",
-                rpdo0_standby,
+                cfg["RPDO0"]["standby"],
                 period=0.5
             )
 
@@ -64,7 +58,7 @@ class MessageSender:
             #if node != "N03":
             iface.send_message(
                 f"{node}_RPDO1",
-                rpdo1,
+                cfg["RPDO1"],
                 period=0.5
             )
 
