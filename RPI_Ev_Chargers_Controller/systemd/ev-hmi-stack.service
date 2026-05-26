@@ -1,0 +1,21 @@
+[Unit]
+Description=EV Charger HMI stack: CAN/ZMQ and FastAPI HMI
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/Documents/Lab_Simulation/RPI_Ev_Chargers_Controller
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/home/pi/Documents/Lab_Simulation/RPI_Ev_Chargers_Controller/hmi.env
+ExecStart=/home/pi/Documents/Lab_Simulation/RPI_Ev_Chargers_Controller/scripts/run_hmi_stack.sh
+ExecStartPost=/home/pi/Documents/Lab_Simulation/RPI_Ev_Chargers_Controller/scripts/restart_hmi_firefox.sh
+ExecStopPost=/home/pi/Documents/Lab_Simulation/RPI_Ev_Chargers_Controller/scripts/stop_hmi_firefox.sh
+Restart=always
+RestartSec=3
+KillSignal=SIGTERM
+TimeoutStopSec=15
+
+[Install]
+WantedBy=multi-user.target

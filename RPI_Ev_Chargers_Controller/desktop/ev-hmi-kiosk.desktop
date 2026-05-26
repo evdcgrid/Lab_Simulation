@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=EV Charger HMI Kiosk
+Comment=Open EV Charger HMI in Firefox fullscreen
+Exec=/home/pi/Documents/Lab_Simulation/RPI_Ev_Chargers_Controller/scripts/start_hmi_firefox.sh
+Terminal=false
+X-GNOME-Autostart-enabled=true

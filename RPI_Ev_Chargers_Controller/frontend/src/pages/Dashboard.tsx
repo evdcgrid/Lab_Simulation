@@ -1,0 +1,172 @@
+import { useMemo } from "react";
+import type { ChargerCommandType } from "../api/commands";
+import { ChargerCard } from "../components/ChargerCard";
+import { ConnectionIndicator } from "../components/ConnectionIndicator";
+import { EventLog } from "../components/EventLog";
+import { MetricCard } from "../components/MetricCard";
+import { TelemetryChart, type ChartPoint, type ChartSeries } from "../components/TelemetryChart";
+import type { ChargerParameters } from "../types/parameters";
+import type { ChargerEvent, ChargerStatus, HistoryPoint, TelemetryConnection, TelemetrySummary } from "../types/telemetry";
+
+const chargerColors = [
+  "#22d3ee",
+  "#36d399",
+  "#fbbf24",
+  "#fb7185",
+  "#a78bfa",
+  "#f97316"
+];
+
+const MAIN_CHART_WINDOW_MS = 30_000;
+
+function fmt(value: number | undefined, digits = 1) {
+  return typeof value === "number" && Number.isFinite(value) ? value.toFixed(digits) : "--";
+}
+
+export function Dashboard({
+  chargers,
+  parameters,
+  summary,
+  livePoints,
+  events,
+  backendConnected,
+  connection,
+  onCommand,
+  onDetails,
+  onParameters,
+  onClearEvents
+}: {
+  chargers: ChargerStatus[];
+  parameters: Record<string, ChargerParameters>;
+  summary?: TelemetrySummary | null;
+  livePoints: Record<string, HistoryPoint[]>;
+  events: ChargerEvent[];
+  backendConnected: boolean;
+  connection?: TelemetryConnection | null;
+  onCommand: (chargerId: string, command: ChargerCommandType) => void;
+  onDetails: (chargerId: string) => void;
+  onParameters: (chargerId: string) => void;
+  onClearEvents: () => void;
+}) {
+  const chartChargerIds = useMemo(() => {
+    const ids = chargers.map((charger) => charger.charger_id);
+    if (ids.length > 0) return ids;
+    return Object.keys(livePoints).sort((a, b) => a.localeCompare(b));
+  }, [chargers, livePoints]);
+
+  const chartPanels = useMemo<Array<{ title: string; series: ChartSeries[] }>>(
+    () => [
+      {
+        title: "Output Current",
+        series: chartChargerIds.map((chargerId, index) => ({
+          key: `${chargerId}_iout`,
+          name: chargerId,
+          color: chargerColors[index % chargerColors.length],
+          unit: "A"
+        }))
+      },
+      {
+        title: "Output Voltage",
+        series: chartChargerIds.map((chargerId, index) => ({
+          key: `${chargerId}_vout`,
+          name: chargerId,
+          color: chargerColors[index % chargerColors.length],
+          unit: "V"
+        }))
+      },
+      {
+        title: "Output Power",
+        series: chartChargerIds.map((chargerId, index) => ({
+          key: `${chargerId}_pout`,
+          name: chargerId,
+          color: chargerColors[index % chargerColors.length],
+          unit: "kW",
+          scale: (value) => value / 1000
+        }))
+      }
+    ],
+    [chartChargerIds]
+  );
+
+  const chartPoints = useMemo<ChartPoint[]>(() => {
+    const latestTimestamp = Math.max(
+      ...Object.values(livePoints)
+        .flatMap((points) => points.map((point) => new Date(point.timestamp).getTime()))
+        .filter(Number.isFinite)
+    );
+    const windowStart = Number.isFinite(latestTimestamp) ? latestTimestamp - MAIN_CHART_WINDOW_MS : 0;
+
+    return Object.entries(livePoints)
+      .flatMap(([chargerId, points]) =>
+        points
+          .filter((point) => {
+            const timestamp = new Date(point.timestamp).getTime();
+            return Number.isFinite(timestamp) && timestamp >= windowStart;
+          })
+          .map((point) => ({
+            charger_id: chargerId,
+            timestamp: point.timestamp,
+            state: point.state,
+            [`${chargerId}_iout`]: point.iout,
+            [`${chargerId}_vout`]: point.vout,
+            [`${chargerId}_pout`]: point.pout
+          }))
+      )
+      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  }, [livePoints]);
+
+  return (
+    <div className="dashboard-screen grid gap-4">
+      <div className="dashboard-summary grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <MetricCard label="Total Power" value={fmt(summary?.total_power_kw)} unit="kW" tone="good" />
+        <MetricCard label="Energy" value={fmt(summary?.total_energy_kwh, 2)} unit="kWh" />
+        <MetricCard label="Active" value={String(summary?.active_chargers ?? 0)} unit="chargers" />
+        <MetricCard
+          label="Alarms"
+          value={String(summary?.active_alarms ?? 0)}
+          tone={(summary?.active_alarms ?? 0) > 0 ? "danger" : "default"}
+        />
+      </div>
+
+      <div className="dashboard-chargers grid gap-4 lg:grid-cols-2">
+        {chargers.map((status) => (
+          <ChargerCard
+            key={status.charger_id}
+            status={status}
+            parameters={parameters[status.charger_id]}
+            onCommand={onCommand}
+            onDetails={onDetails}
+            onParameters={onParameters}
+          />
+        ))}
+      </div>
+
+      <section className="dashboard-chart rounded-lg border border-white/10 bg-graphite-850 p-4 shadow-panel">
+        <div className="dashboard-chart-grid grid grid-cols-3 gap-3">
+          {chartPanels.map((panel) => (
+            <div key={panel.title} className="mini-chart min-w-0 rounded-md border border-white/10 bg-graphite-900 p-2">
+              <div className="mb-1 text-sm font-semibold text-zinc-100">{panel.title}</div>
+              <TelemetryChart
+                points={chartPoints}
+                series={panel.series}
+                height={118}
+                compact
+                maxPoints={240}
+                bucketMs={1000}
+                dropOpenBucket
+                showDots={false}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <aside className="dashboard-side grid content-start gap-4">
+        <div className="lg:hidden">
+          <ConnectionIndicator backendConnected={backendConnected} connection={connection} />
+        </div>
+        <EventLog events={events} onClear={onClearEvents} />
+      </aside>
+    </div>
+  );
+}
