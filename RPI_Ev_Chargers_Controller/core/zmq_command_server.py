@@ -9,6 +9,7 @@ from typing import Any
 import zmq
 
 from config.constants import CHARGING, FAULT_ACK, POWER_ON, STAND_BY
+from config.hmi_parameter_defaults import parameter_default
 from config.signals_config import signals
 
 
@@ -23,7 +24,15 @@ class ZmqCommandServer:
         self._stop = threading.Event()
         self._charge_watchdogs: dict[str, threading.Event] = {}
         self._state_requests: dict[str, int] = {}
-        self._target_voltage_v: dict[str, float] = {}
+        self._target_voltage_v: dict[str, float] = {
+            charger_id: parameter_default(
+                charger_id,
+                "target_voltage_v",
+                float(signals[charger_id]["RPDO0"]["standby"].get(f"{charger_id}_itfc_output_voltage_setpoint", 0)),
+            )
+            for charger_id in iface_map
+            if charger_id in signals
+        }
 
     def start(self) -> None:
         self._socket = self._context.socket(zmq.REP)

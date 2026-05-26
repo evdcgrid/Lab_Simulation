@@ -26,6 +26,8 @@ for cmdline in /proc/[0-9]*/cmdline; do
   fi
 done
 
+pkill unclutter 2>/dev/null || true
+
 if ((${#MATCHED_PIDS[@]} == 0)); then
   exit 0
 fi

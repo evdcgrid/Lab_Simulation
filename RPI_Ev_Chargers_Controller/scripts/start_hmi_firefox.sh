@@ -65,6 +65,12 @@ user_pref("browser.startup.homepage_override.mstone", "ignore");
 user_pref("browser.sessionstore.resume_from_crash", false);
 user_pref("browser.tabs.warnOnClose", false);
 user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
+
+user_pref("browser.display.background_color", "#000000");
+user_pref("browser.display.foreground_color", "#ffffff");
+user_pref("browser.theme.content-theme", 0);
+user_pref("browser.theme.toolbar-theme", 0);
+user_pref("ui.systemUsesDarkTheme", 1);
 EOF
 
 deadline=$((SECONDS + WAIT_SECONDS))
@@ -74,5 +80,10 @@ while (( SECONDS < deadline )); do
   fi
   sleep 1
 done
+
+if command -v unclutter >/dev/null 2>&1; then
+  pkill unclutter 2>/dev/null || true
+  DISPLAY="${DISPLAY:-:0}" unclutter -idle 0 -root &
+fi
 
 exec "$BROWSER" --new-instance --profile "$PROFILE_DIR" --kiosk "$URL"

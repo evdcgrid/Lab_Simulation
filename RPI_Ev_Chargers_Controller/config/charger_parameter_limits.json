@@ -2,38 +2,38 @@
   "defaults": {
     "requested_power_kw": {
       "default": 3.3,
-      "min": 0.5,
+      "min": 0.0,
       "max": 11.04,
       "step": 0.1
     },
     "target_voltage_v": {
       "default": 400.0,
-      "min": 150.0,
+      "min": 250.0,
       "max": 500.0,
-      "step": 5.0
+      "step": 1.0
     },
     "charge_current_limit_a": {
       "default": 16.0,
       "min": 0.0,
-      "max": 32.0,
+      "max": 300.0,
       "step": 0.5
     },
     "discharge_current_limit_a": {
       "default": 16.0,
       "min": 0.0,
-      "max": 32.0,
+      "max": 300.0,
       "step": 0.5
     },
     "voltage_min_v": {
       "default": 250.0,
-      "min": 150.0,
+      "min": 0.0,
       "max": 499.0,
       "step": 1.0
     },
     "voltage_max_v": {
       "default": 500.0,
-      "min": 151.0,
-      "max": 500.0,
+      "min": 251.0,
+      "max": 1000.0,
       "step": 1.0
     }
   },
@@ -50,11 +50,11 @@
       },
       "charge_current_limit_a": {
         "default": 16.0,
-        "max": 32.0
+        "max": 300.0
       },
       "discharge_current_limit_a": {
         "default": 16.0,
-        "max": 32.0
+        "max": 300.0
       }
     },
     "N02": {
@@ -69,11 +69,11 @@
       },
       "charge_current_limit_a": {
         "default": 16.0,
-        "max": 32.0
+        "max": 300.0
       },
       "discharge_current_limit_a": {
         "default": 16.0,
-        "max": 32.0
+        "max": 300.0
       }
     }
   }
