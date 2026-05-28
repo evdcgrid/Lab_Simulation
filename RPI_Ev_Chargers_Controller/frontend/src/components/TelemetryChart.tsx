@@ -24,7 +24,7 @@ export interface ChartSeries {
 interface TelemetryChartProps {
   points: ChartPoint[];
   series: ChartSeries[];
-  height?: number;
+  height?: number | string;
   compact?: boolean;
   maxPoints?: number;
   bucketMs?: number;

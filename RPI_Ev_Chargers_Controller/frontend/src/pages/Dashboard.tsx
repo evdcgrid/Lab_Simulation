@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { ChargerCommandType } from "../api/commands";
 import { ChargerCard } from "../components/ChargerCard";
 import { ConnectionIndicator } from "../components/ConnectionIndicator";
@@ -17,7 +17,11 @@ const chargerColors = [
   "#f97316"
 ];
 
-const MAIN_CHART_WINDOW_MS = 30_000;
+const chartWindowOptions = [
+  { label: "1 min", ms: 60_000, bucketMs: 1000 },
+  { label: "5 min", ms: 300_000, bucketMs: 2000 },
+  { label: "15 min", ms: 900_000, bucketMs: 5000 }
+] as const;
 
 function fmt(value: number | undefined, digits = 1) {
   return typeof value === "number" && Number.isFinite(value) ? value.toFixed(digits) : "--";
@@ -34,6 +38,9 @@ export function Dashboard({
   onCommand,
   onDetails,
   onParameters,
+  onPowerSetpoint,
+  powerSaving,
+  powerErrors,
   onClearEvents
 }: {
   chargers: ChargerStatus[];
@@ -46,8 +53,13 @@ export function Dashboard({
   onCommand: (chargerId: string, command: ChargerCommandType) => void;
   onDetails: (chargerId: string) => void;
   onParameters: (chargerId: string) => void;
+  onPowerSetpoint: (chargerId: string, requestedPowerKw: number) => Promise<void>;
+  powerSaving: Record<string, boolean>;
+  powerErrors: Record<string, string | null>;
   onClearEvents: () => void;
 }) {
+  const [chartWindow, setChartWindow] = useState<(typeof chartWindowOptions)[number]>(chartWindowOptions[0]);
+
   const chartChargerIds = useMemo(() => {
     const ids = chargers.map((charger) => charger.charger_id);
     if (ids.length > 0) return ids;
@@ -94,7 +106,7 @@ export function Dashboard({
         .flatMap((points) => points.map((point) => new Date(point.timestamp).getTime()))
         .filter(Number.isFinite)
     );
-    const windowStart = Number.isFinite(latestTimestamp) ? latestTimestamp - MAIN_CHART_WINDOW_MS : 0;
+    const windowStart = Number.isFinite(latestTimestamp) ? latestTimestamp - chartWindow.ms : 0;
 
     return Object.entries(livePoints)
       .flatMap(([chargerId, points]) =>
@@ -113,7 +125,7 @@ export function Dashboard({
           }))
       )
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
-  }, [livePoints]);
+  }, [livePoints, chartWindow.ms]);
 
   return (
     <div className="dashboard-screen grid gap-4">
@@ -137,22 +149,43 @@ export function Dashboard({
             onCommand={onCommand}
             onDetails={onDetails}
             onParameters={onParameters}
+            onPowerSetpoint={onPowerSetpoint}
+            powerSaving={Boolean(powerSaving[status.charger_id])}
+            powerError={powerErrors[status.charger_id]}
           />
         ))}
       </div>
 
       <section className="dashboard-chart rounded-lg border border-white/10 bg-graphite-850 p-4 shadow-panel">
+        <div className="dashboard-chart-toolbar mb-2 flex items-center justify-between gap-3">
+          <div className="text-sm font-semibold text-zinc-100">Live Trends</div>
+          <div className="flex rounded-md border border-white/10 bg-graphite-900 p-1">
+            {chartWindowOptions.map((option) => (
+              <button
+                key={option.label}
+                className={`h-9 rounded px-3 text-sm font-semibold ${
+                  chartWindow.label === option.label
+                    ? "bg-zinc-100 text-graphite-950"
+                    : "text-zinc-400"
+                }`}
+                onClick={() => setChartWindow(option)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className="dashboard-chart-grid grid grid-cols-3 gap-3">
           {chartPanels.map((panel) => (
-            <div key={panel.title} className="mini-chart min-w-0 rounded-md border border-white/10 bg-graphite-900 p-2">
+            <div key={panel.title} className="mini-chart grid min-h-[150px] min-w-0 grid-rows-[auto_minmax(0,1fr)] rounded-md border border-white/10 bg-graphite-900 p-2">
               <div className="mb-1 text-sm font-semibold text-zinc-100">{panel.title}</div>
               <TelemetryChart
                 points={chartPoints}
                 series={panel.series}
-                height={118}
+                height="100%"
                 compact
                 maxPoints={240}
-                bucketMs={1000}
+                bucketMs={chartWindow.bucketMs}
                 dropOpenBucket
                 showDots={false}
               />

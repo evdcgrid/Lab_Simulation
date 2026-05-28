@@ -179,14 +179,13 @@ class TelemetryStore:
                 energy_session_kwh=telemetry.energy_session_kwh,
                 state=effective_state,
             )
-            self._live_points[telemetry.charger_id].append(sample)
-
             should_persist = (
                 now_ms - self._last_history_ms.get(telemetry.charger_id, 0)
                 >= self.settings.history_sample_period_ms
             )
             if should_persist:
                 self._last_history_ms[telemetry.charger_id] = now_ms
+                self._live_points[telemetry.charger_id].append(sample)
 
             event = None
             if previous.state != effective_state:
@@ -206,7 +205,7 @@ class TelemetryStore:
 
             return {
                 "status": status,
-                "point": sample,
+                "point": sample if should_persist else None,
                 "history_sample": sample if should_persist else None,
                 "event": event,
                 "summary": self._summary_locked(),

@@ -2,7 +2,7 @@ import { Activity, BarChart3, LayoutDashboard, SlidersHorizontal } from "lucide-
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import type { ChargerCommandType } from "./api/commands";
-import { clearEvents, getChargers, sendCommand } from "./api/client";
+import { clearEvents, getChargers, sendCommand, updateParameters } from "./api/client";
 import { connectTelemetry } from "./api/websocket";
 import { Header } from "./components/Header";
 import { ChargerDetail } from "./pages/ChargerDetail";
@@ -30,6 +30,8 @@ const emptySummary: TelemetrySummary = {
   charger_count: 0
 };
 
+const LIVE_POINT_BUFFER = 1200;
+
 function upsertStatus(items: ChargerStatus[], status: ChargerStatus) {
   const index = items.findIndex((item) => item.charger_id === status.charger_id);
   if (index === -1) return [...items, status].sort((a, b) => a.charger_id.localeCompare(b.charger_id));
@@ -42,7 +44,7 @@ function appendPoint(points: Record<string, HistoryPoint[]>, point: HistoryPoint
   const current = points[point.charger_id] ?? [];
   return {
     ...points,
-    [point.charger_id]: [...current, point].slice(-600)
+    [point.charger_id]: [...current, point].slice(-LIVE_POINT_BUFFER)
   };
 }
 
@@ -76,6 +78,8 @@ export default function App() {
   const [livePoints, setLivePoints] = useState<Record<string, HistoryPoint[]>>({});
   const [selectedChargerId, setSelectedChargerId] = useState<string | undefined>();
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [powerSaving, setPowerSaving] = useState<Record<string, boolean>>({});
+  const [powerErrors, setPowerErrors] = useState<Record<string, string | null>>({});
 
   useEffect(() => {
     getChargers()
@@ -155,6 +159,31 @@ export default function App() {
     });
   };
 
+  const applyPowerSetpoint = async (chargerId: string, requestedPowerKw: number) => {
+    setPowerSaving((current) => ({ ...current, [chargerId]: true }));
+    setPowerErrors((current) => ({ ...current, [chargerId]: null }));
+    try {
+      const response = await updateParameters(chargerId, { requested_power_kw: requestedPowerKw });
+      setParameters((current) => upsertParameters(current, response.parameters));
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Could not apply power setpoint";
+      setPowerErrors((current) => ({ ...current, [chargerId]: message }));
+      setEvents((current) => [
+        {
+          id: crypto.randomUUID(),
+          timestamp: new Date().toISOString(),
+          charger_id: chargerId,
+          severity: "error",
+          kind: "parameter_error",
+          message
+        },
+        ...current
+      ]);
+    } finally {
+      setPowerSaving((current) => ({ ...current, [chargerId]: false }));
+    }
+  };
+
   const clearEventLog = () => {
     setEvents([]);
     clearEvents().catch((err: Error) => {
@@ -225,6 +254,9 @@ export default function App() {
         onCommand={runCommand}
         onDetails={openDetail}
         onParameters={openParameters}
+        onPowerSetpoint={applyPowerSetpoint}
+        powerSaving={powerSaving}
+        powerErrors={powerErrors}
         onClearEvents={clearEventLog}
       />
     );

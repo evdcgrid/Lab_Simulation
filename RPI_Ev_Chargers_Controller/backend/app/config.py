@@ -183,7 +183,7 @@ def get_settings() -> Settings:
         stale_timeout_seconds=_get_int("STALE_TIMEOUT_SECONDS", 3),
         offline_timeout_seconds=_get_int("OFFLINE_TIMEOUT_SECONDS", 10),
         sqlite_path=Path(os.getenv("SQLITE_PATH", str(sqlite_default))).expanduser(),
-        live_buffer_points=_get_int("LIVE_BUFFER_POINTS", 600),
+        live_buffer_points=_get_int("LIVE_BUFFER_POINTS", 1200),
         max_events=_get_int("MAX_EVENTS", 120),
         charger_ids=_get_csv("CHARGER_IDS", "charger_1,charger_2"),
         allow_unknown_chargers=_get_bool("ALLOW_UNKNOWN_CHARGERS", False),

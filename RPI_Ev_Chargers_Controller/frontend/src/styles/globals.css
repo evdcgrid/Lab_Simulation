@@ -58,6 +58,31 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 28px;
 }
 
+.power-slider-indicator {
+  pointer-events: none;
+  touch-action: none;
+}
+
+.charger-power-readout {
+  white-space: nowrap;
+}
+
+.charger-primary-label {
+  margin-bottom: 6px;
+}
+
+.charger-primary-value {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.4rem;
+  line-height: 1;
+}
+
+.charger-primary-unit {
+  line-height: 1.15;
+}
+
 @media (orientation: portrait) {
   body {
     overflow: auto;
@@ -129,7 +154,7 @@ input[type="number"]::-webkit-outer-spin-button {
     height: 100%;
     min-height: 0;
     grid-template-columns: minmax(0, 1fr) 300px;
-    grid-template-rows: 86px minmax(0, 1fr) 168px;
+    grid-template-rows: 78px 390px minmax(140px, 1fr);
     gap: 10px;
   }
 
@@ -163,61 +188,104 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 
   .charger-card {
+    display: flex;
+    flex-direction: column;
     min-height: 0;
     overflow: hidden;
-    padding: 12px;
+    padding: 10px;
   }
 
   .charger-card .text-3xl {
-    font-size: 1.75rem;
+    font-size: 1.55rem;
     line-height: 1;
   }
 
   .charger-primary {
-    margin-top: 12px;
-    gap: 10px;
+    margin-top: 8px;
+    gap: 8px;
+  }
+
+  .charger-primary-label {
+    margin-bottom: 8px;
   }
 
   .charger-secondary {
-    margin-top: 10px;
-    padding: 8px;
+    margin-top: 7px;
+    padding: 7px;
     gap: 8px;
   }
 
   .charger-setpoint {
-    margin-top: 8px;
-    padding: 8px;
+    margin-top: 7px;
+    padding: 7px;
     gap: 8px;
   }
 
   .charger-secondary .text-lg,
   .charger-setpoint .text-lg {
-    font-size: 0.98rem;
+    font-size: 0.92rem;
+  }
+
+  .charger-power-control {
+    margin-top: 7px;
+    grid-template-columns: 50px minmax(90px, 1fr) 112px 50px 52px;
+    justify-content: start;
+    gap: 7px;
+  }
+
+  .charger-power-control button,
+  .charger-power-control > div {
+    height: 48px;
+  }
+
+  .charger-power-control button svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .charger-power-control .power-slider {
+    min-width: 0;
+  }
+
+  .charger-power-readout {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 0.82rem;
   }
 
   .charger-actions {
-    margin-top: 10px;
+    margin-top: auto;
+    padding-top: 8px;
+    gap: 7px;
   }
 
   .charger-actions button {
-    height: 48px;
-    font-size: 0.84rem;
+    height: 42px;
+    font-size: 0.8rem;
   }
 
   .dashboard-chart {
     grid-column: 1 / -1;
     grid-row: 3;
     min-height: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
     overflow: hidden;
     padding: 10px 12px;
   }
 
+  .dashboard-chart-toolbar {
+    margin-bottom: 8px;
+  }
+
   .dashboard-chart-grid {
     height: 100%;
+    min-height: 0;
   }
 
   .mini-chart {
     min-height: 0;
+    grid-template-rows: auto minmax(0, 1fr);
     overflow: hidden;
   }
 
@@ -417,5 +485,181 @@ input[type="number"]::-webkit-outer-spin-button {
   .parameter-apply {
     height: 48px;
     margin-top: 0;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 760px) {
+  .dashboard-screen {
+    grid-template-rows: 54px 342px minmax(186px, 1fr);
+    gap: 8px;
+  }
+
+  .dashboard-summary {
+    gap: 8px;
+  }
+
+  .metric-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 10px;
+  }
+
+  .metric-card > div:first-child {
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+
+  .metric-card > div:nth-child(2) {
+    margin-top: 0;
+    gap: 4px;
+  }
+
+  .metric-card span:first-child {
+    font-size: 1.18rem;
+  }
+
+  .metric-card span:last-child {
+    font-size: 0.78rem;
+  }
+
+  .dashboard-chargers {
+    gap: 8px;
+  }
+
+  .charger-card {
+    padding: 8px;
+  }
+
+  .charger-head > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .charger-id {
+    min-width: 2.3rem;
+    font-size: 0.78rem;
+  }
+
+  .charger-status {
+    margin-top: 0;
+  }
+
+  .charger-status span {
+    min-height: 24px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 0.72rem;
+  }
+
+  .charger-primary {
+    margin-top: 6px;
+    gap: 6px;
+  }
+
+  .charger-primary > div,
+  .charger-secondary > div,
+  .charger-setpoint > .grid:first-child > div {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .charger-primary .text-xs,
+  .charger-secondary .text-xs,
+  .charger-setpoint .text-xs {
+    flex: 0 0 auto;
+    font-size: 0.68rem;
+    line-height: 1;
+  }
+
+  .charger-primary .mt-1 {
+    margin-top: 0;
+  }
+
+  .charger-card .text-3xl {
+    font-size: 1.12rem;
+  }
+
+  .charger-primary .text-sm {
+    font-size: 0.68rem;
+  }
+
+  .charger-secondary {
+    margin-top: 5px;
+    padding: 6px;
+  }
+
+  .charger-setpoint {
+    margin-top: 6px;
+    padding: 8px;
+  }
+
+  .charger-secondary .text-lg,
+  .charger-setpoint .text-lg {
+    font-size: 0.78rem;
+  }
+
+  .charger-power-control {
+    margin-top: 7px;
+    grid-template-columns: 46px minmax(80px, 1fr) 116px 46px 48px;
+    gap: 6px;
+  }
+
+  .charger-power-control button,
+  .charger-power-control > div {
+    height: 42px;
+  }
+
+  .charger-power-control svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .charger-power-readout {
+    font-size: 0.86rem;
+  }
+
+  .power-slider::-webkit-slider-thumb {
+    height: 22px;
+    width: 22px;
+  }
+
+  .charger-actions {
+    padding-top: 6px;
+    gap: 6px;
+  }
+
+  .charger-actions button {
+    height: 36px;
+    font-size: 0.72rem;
+  }
+
+  .charger-actions svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .dashboard-chart {
+    padding: 8px 10px;
+  }
+
+  .dashboard-chart-toolbar {
+    margin-bottom: 6px;
+  }
+
+  .chart-header button,
+  .dashboard-chart-toolbar button {
+    height: 34px;
+    min-height: 34px;
+  }
+
+  .mini-chart {
+    min-height: 0;
+    padding: 6px;
   }
 }
