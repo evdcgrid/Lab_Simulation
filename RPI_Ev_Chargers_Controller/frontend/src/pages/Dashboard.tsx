@@ -23,20 +23,20 @@ const chartWindowOptions = [
   { label: "15 min", ms: 900_000, bucketMs: 5000 }
 ] as const;
 
-const minScaledOutputVoltage = 10;
+const minScaledVoltage = 10;
 
 function fmt(value: number | undefined, digits = 1) {
   return typeof value === "number" && Number.isFinite(value) ? value.toFixed(digits) : "--";
 }
 
-function outputVoltageDomain(points: ChartPoint[], chargerIds: string[]): ChartYAxisDomain | undefined {
+function voltageDomain(points: ChartPoint[], chargerIds: string[], keySuffix: "vin" | "vout"): ChartYAxisDomain | undefined {
   const values = points.flatMap((point) =>
     chargerIds
-      .map((chargerId) => (point as Record<string, unknown>)[`${chargerId}_vout`])
+      .map((chargerId) => (point as Record<string, unknown>)[`${chargerId}_${keySuffix}`])
       .filter((value): value is number => (
         typeof value === "number"
         && Number.isFinite(value)
-        && value > minScaledOutputVoltage
+        && value > minScaledVoltage
       ))
   );
 
@@ -109,6 +109,7 @@ export function Dashboard({
             charger_id: chargerId,
             timestamp: point.timestamp,
             state: point.state,
+            [`${chargerId}_vin`]: point.vin,
             [`${chargerId}_iout`]: point.iout,
             [`${chargerId}_vout`]: point.vout,
             [`${chargerId}_pout`]: point.pout
@@ -117,8 +118,13 @@ export function Dashboard({
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   }, [livePoints, chartWindow.ms]);
 
-  const voltageDomain = useMemo(
-    () => outputVoltageDomain(chartPoints, chartChargerIds),
+  const inputVoltageDomain = useMemo(
+    () => voltageDomain(chartPoints, chartChargerIds, "vin"),
+    [chartPoints, chartChargerIds]
+  );
+
+  const outputVoltageDomain = useMemo(
+    () => voltageDomain(chartPoints, chartChargerIds, "vout"),
     [chartPoints, chartChargerIds]
   );
 
@@ -134,9 +140,20 @@ export function Dashboard({
         }))
       },
       {
+        title: "Input Voltage",
+        yDomain: inputVoltageDomain,
+        yAllowDataOverflow: Boolean(inputVoltageDomain),
+        series: chartChargerIds.map((chargerId, index) => ({
+          key: `${chargerId}_vin`,
+          name: chargerId,
+          color: chargerColors[index % chargerColors.length],
+          unit: "V"
+        }))
+      },
+      {
         title: "Output Voltage",
-        yDomain: voltageDomain,
-        yAllowDataOverflow: Boolean(voltageDomain),
+        yDomain: outputVoltageDomain,
+        yAllowDataOverflow: Boolean(outputVoltageDomain),
         series: chartChargerIds.map((chargerId, index) => ({
           key: `${chargerId}_vout`,
           name: chargerId,
@@ -155,7 +172,7 @@ export function Dashboard({
         }))
       }
     ],
-    [chartChargerIds, voltageDomain]
+    [chartChargerIds, inputVoltageDomain, outputVoltageDomain]
   );
 
   return (
@@ -206,7 +223,7 @@ export function Dashboard({
             ))}
           </div>
         </div>
-        <div className="dashboard-chart-grid grid grid-cols-3 gap-3">
+        <div className="dashboard-chart-grid grid grid-cols-2 gap-3 xl:grid-cols-4">
           {chartPanels.map((panel) => (
             <div key={panel.title} className="mini-chart grid min-h-[150px] min-w-0 grid-rows-[auto_minmax(0,1fr)] rounded-md border border-white/10 bg-graphite-900 p-2">
               <div className="mb-1 text-sm font-semibold text-zinc-100">{panel.title}</div>
