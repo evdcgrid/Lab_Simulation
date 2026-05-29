@@ -4,7 +4,7 @@ import { ChargerCard } from "../components/ChargerCard";
 import { ConnectionIndicator } from "../components/ConnectionIndicator";
 import { EventLog } from "../components/EventLog";
 import { MetricCard } from "../components/MetricCard";
-import { TelemetryChart, type ChartPoint, type ChartSeries } from "../components/TelemetryChart";
+import { TelemetryChart, type ChartPoint, type ChartSeries, type ChartYAxisDomain } from "../components/TelemetryChart";
 import type { ChargerParameters } from "../types/parameters";
 import type { ChargerEvent, ChargerStatus, HistoryPoint, TelemetryConnection, TelemetrySummary } from "../types/telemetry";
 
@@ -26,6 +26,16 @@ const chartWindowOptions = [
 function fmt(value: number | undefined, digits = 1) {
   return typeof value === "number" && Number.isFinite(value) ? value.toFixed(digits) : "--";
 }
+
+const voltageYAxisDomain: ChartYAxisDomain = ([dataMin, dataMax]) => {
+  if (!Number.isFinite(dataMin) || !Number.isFinite(dataMax)) return [0, 1];
+
+  const span = Math.max(0, dataMax - dataMin);
+  const reference = Math.max(Math.abs(dataMin), Math.abs(dataMax), 1);
+  const padding = span > 0 ? Math.max(span * 0.12, reference * 0.02) : Math.max(reference * 0.02, 1);
+
+  return [dataMin - padding, dataMax + padding];
+};
 
 export function Dashboard({
   chargers,
@@ -66,7 +76,7 @@ export function Dashboard({
     return Object.keys(livePoints).sort((a, b) => a.localeCompare(b));
   }, [chargers, livePoints]);
 
-  const chartPanels = useMemo<Array<{ title: string; series: ChartSeries[]; yDomain?: ["auto", "auto"] }>>(
+  const chartPanels = useMemo<Array<{ title: string; series: ChartSeries[]; yDomain?: ChartYAxisDomain }>>(
     () => [
       {
         title: "Output Current",
@@ -79,7 +89,7 @@ export function Dashboard({
       },
       {
         title: "Output Voltage",
-        yDomain: ["auto", "auto"],
+        yDomain: voltageYAxisDomain,
         series: chartChargerIds.map((chargerId, index) => ({
           key: `${chargerId}_vout`,
           name: chargerId,

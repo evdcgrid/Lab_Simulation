@@ -22,6 +22,8 @@ export interface ChartSeries {
   scale?: (value: number) => number;
 }
 
+export type ChartYAxisDomain = AxisDomain;
+
 interface TelemetryChartProps {
   points: ChartPoint[];
   series: ChartSeries[];
@@ -111,7 +113,7 @@ export function TelemetryChart({
         <LineChart data={data} margin={compact ? { top: 8, right: 10, left: 0, bottom: 0 } : { top: 12, right: 18, left: 0, bottom: 0 }}>
           <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
           <XAxis dataKey="time" tick={compact ? false : { fill: "#a7b0bc", fontSize: 12 }} minTickGap={24} />
-          <YAxis tick={{ fill: "#a7b0bc", fontSize: compact ? 10 : 12 }} width={compact ? 34 : 44} domain={yDomain} />
+          <YAxis type="number" tick={{ fill: "#a7b0bc", fontSize: compact ? 10 : 12 }} width={compact ? 34 : 44} domain={yDomain} />
           <Tooltip
             contentStyle={{
               background: "#12161b",
