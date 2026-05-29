@@ -69,6 +69,16 @@ export function Dashboard({
   const chartPanels = useMemo<Array<{ title: string; series: ChartSeries[]; yDomain?: ["auto", "auto"] }>>(
     () => [
       {
+        title: "Input Voltage",
+        yDomain: ["auto", "auto"],
+        series: chartChargerIds.map((chargerId, index) => ({
+          key: `${chargerId}_vin`,
+          name: chargerId,
+          color: chargerColors[index % chargerColors.length],
+          unit: "V"
+        }))
+      },
+      {
         title: "Output Current",
         series: chartChargerIds.map((chargerId, index) => ({
           key: `${chargerId}_iout`,
@@ -120,6 +130,7 @@ export function Dashboard({
             charger_id: chargerId,
             timestamp: point.timestamp,
             state: point.state,
+            [`${chargerId}_vin`]: point.vin,
             [`${chargerId}_iout`]: point.iout,
             [`${chargerId}_vout`]: point.vout,
             [`${chargerId}_pout`]: point.pout
@@ -176,7 +187,7 @@ export function Dashboard({
             ))}
           </div>
         </div>
-        <div className="dashboard-chart-grid grid grid-cols-3 gap-3">
+        <div className="dashboard-chart-grid grid grid-cols-4 gap-3">
           {chartPanels.map((panel) => (
             <div key={panel.title} className="mini-chart grid min-h-[150px] min-w-0 grid-rows-[auto_minmax(0,1fr)] rounded-md border border-white/10 bg-graphite-900 p-2">
               <div className="mb-1 text-sm font-semibold text-zinc-100">{panel.title}</div>
