@@ -66,11 +66,12 @@ export function Dashboard({
     return Object.keys(livePoints).sort((a, b) => a.localeCompare(b));
   }, [chargers, livePoints]);
 
-  const chartPanels = useMemo<Array<{ title: string; series: ChartSeries[]; yDomain?: ["auto", "auto"] }>>(
+  const chartPanels = useMemo<Array<{ title: string; series: ChartSeries[]; yDomain?: ["auto", "auto"]; yAxisWidth?: number }>>(
     () => [
       {
         title: "Input Voltage",
         yDomain: ["auto", "auto"],
+        yAxisWidth: 48,
         series: chartChargerIds.map((chargerId, index) => ({
           key: `${chargerId}_vin`,
           name: chargerId,
@@ -190,6 +191,7 @@ export function Dashboard({
                 dropOpenBucket
                 showDots={false}
                 yDomain={panel.yDomain}
+                yAxisWidth={panel.yAxisWidth}
               />
             </div>
           ))}
