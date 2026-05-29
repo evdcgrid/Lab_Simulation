@@ -88,16 +88,6 @@ export function Dashboard({
         }))
       },
       {
-        title: "Output Voltage",
-        yDomain: ["auto", "auto"],
-        series: chartChargerIds.map((chargerId, index) => ({
-          key: `${chargerId}_vout`,
-          name: chargerId,
-          color: chargerColors[index % chargerColors.length],
-          unit: "V"
-        }))
-      },
-      {
         title: "Output Power",
         series: chartChargerIds.map((chargerId, index) => ({
           key: `${chargerId}_pout`,
@@ -132,7 +122,6 @@ export function Dashboard({
             state: point.state,
             [`${chargerId}_vin`]: point.vin,
             [`${chargerId}_iout`]: point.iout,
-            [`${chargerId}_vout`]: point.vout,
             [`${chargerId}_pout`]: point.pout
           }))
       )
@@ -187,7 +176,7 @@ export function Dashboard({
             ))}
           </div>
         </div>
-        <div className="dashboard-chart-grid grid grid-cols-4 gap-3">
+        <div className="dashboard-chart-grid grid grid-cols-3 gap-3">
           {chartPanels.map((panel) => (
             <div key={panel.title} className="mini-chart grid min-h-[150px] min-w-0 grid-rows-[auto_minmax(0,1fr)] rounded-md border border-white/10 bg-graphite-900 p-2">
               <div className="mb-1 text-sm font-semibold text-zinc-100">{panel.title}</div>
