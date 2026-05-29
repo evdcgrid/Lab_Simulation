@@ -8,6 +8,7 @@ import {
   XAxis,
   YAxis
 } from "recharts";
+import type { AxisDomain } from "recharts/types/util/types";
 import { useMemo } from "react";
 import type { HistoryPoint } from "../types/telemetry";
 
@@ -30,6 +31,7 @@ interface TelemetryChartProps {
   bucketMs?: number;
   dropOpenBucket?: boolean;
   showDots?: boolean;
+  yDomain?: AxisDomain;
 }
 
 function formatTime(value: string) {
@@ -78,7 +80,8 @@ export function TelemetryChart({
   maxPoints,
   bucketMs,
   dropOpenBucket = false,
-  showDots = !compact
+  showDots = !compact,
+  yDomain
 }: TelemetryChartProps) {
   const pointLimit = maxPoints ?? (compact ? 240 : 900);
   const sampledPoints = useMemo(
@@ -108,7 +111,7 @@ export function TelemetryChart({
         <LineChart data={data} margin={compact ? { top: 8, right: 10, left: 0, bottom: 0 } : { top: 12, right: 18, left: 0, bottom: 0 }}>
           <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
           <XAxis dataKey="time" tick={compact ? false : { fill: "#a7b0bc", fontSize: 12 }} minTickGap={24} />
-          <YAxis tick={{ fill: "#a7b0bc", fontSize: compact ? 10 : 12 }} width={compact ? 34 : 44} />
+          <YAxis tick={{ fill: "#a7b0bc", fontSize: compact ? 10 : 12 }} width={compact ? 34 : 44} domain={yDomain} />
           <Tooltip
             contentStyle={{
               background: "#12161b",
