@@ -23,13 +23,27 @@ const chartWindowOptions = [
   { label: "15 min", ms: 900_000, bucketMs: 5000 }
 ] as const;
 
+const minScaledOutputVoltage = 10;
+
 function fmt(value: number | undefined, digits = 1) {
   return typeof value === "number" && Number.isFinite(value) ? value.toFixed(digits) : "--";
 }
 
-const voltageYAxisDomain: ChartYAxisDomain = ([dataMin, dataMax]) => {
-  if (!Number.isFinite(dataMin) || !Number.isFinite(dataMax)) return [0, 1];
+function outputVoltageDomain(points: ChartPoint[], chargerIds: string[]): ChartYAxisDomain | undefined {
+  const values = points.flatMap((point) =>
+    chargerIds
+      .map((chargerId) => (point as Record<string, unknown>)[`${chargerId}_vout`])
+      .filter((value): value is number => (
+        typeof value === "number"
+        && Number.isFinite(value)
+        && value > minScaledOutputVoltage
+      ))
+  );
 
+  if (values.length === 0) return undefined;
+
+  const dataMin = Math.min(...values);
+  const dataMax = Math.max(...values);
   const span = Math.max(0, dataMax - dataMin);
   const reference = Math.max(Math.abs(dataMin), Math.abs(dataMax), 1);
   const padding = span > 0 ? Math.max(span * 0.12, reference * 0.02) : Math.max(reference * 0.02, 1);
@@ -76,41 +90,6 @@ export function Dashboard({
     return Object.keys(livePoints).sort((a, b) => a.localeCompare(b));
   }, [chargers, livePoints]);
 
-  const chartPanels = useMemo<Array<{ title: string; series: ChartSeries[]; yDomain?: ChartYAxisDomain }>>(
-    () => [
-      {
-        title: "Output Current",
-        series: chartChargerIds.map((chargerId, index) => ({
-          key: `${chargerId}_iout`,
-          name: chargerId,
-          color: chargerColors[index % chargerColors.length],
-          unit: "A"
-        }))
-      },
-      {
-        title: "Output Voltage",
-        yDomain: voltageYAxisDomain,
-        series: chartChargerIds.map((chargerId, index) => ({
-          key: `${chargerId}_vout`,
-          name: chargerId,
-          color: chargerColors[index % chargerColors.length],
-          unit: "V"
-        }))
-      },
-      {
-        title: "Output Power",
-        series: chartChargerIds.map((chargerId, index) => ({
-          key: `${chargerId}_pout`,
-          name: chargerId,
-          color: chargerColors[index % chargerColors.length],
-          unit: "kW",
-          scale: (value) => value / 1000
-        }))
-      }
-    ],
-    [chartChargerIds]
-  );
-
   const chartPoints = useMemo<ChartPoint[]>(() => {
     const latestTimestamp = Math.max(
       ...Object.values(livePoints)
@@ -137,6 +116,47 @@ export function Dashboard({
       )
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   }, [livePoints, chartWindow.ms]);
+
+  const voltageDomain = useMemo(
+    () => outputVoltageDomain(chartPoints, chartChargerIds),
+    [chartPoints, chartChargerIds]
+  );
+
+  const chartPanels = useMemo<Array<{ title: string; series: ChartSeries[]; yDomain?: ChartYAxisDomain; yAllowDataOverflow?: boolean }>>(
+    () => [
+      {
+        title: "Output Current",
+        series: chartChargerIds.map((chargerId, index) => ({
+          key: `${chargerId}_iout`,
+          name: chargerId,
+          color: chargerColors[index % chargerColors.length],
+          unit: "A"
+        }))
+      },
+      {
+        title: "Output Voltage",
+        yDomain: voltageDomain,
+        yAllowDataOverflow: Boolean(voltageDomain),
+        series: chartChargerIds.map((chargerId, index) => ({
+          key: `${chargerId}_vout`,
+          name: chargerId,
+          color: chargerColors[index % chargerColors.length],
+          unit: "V"
+        }))
+      },
+      {
+        title: "Output Power",
+        series: chartChargerIds.map((chargerId, index) => ({
+          key: `${chargerId}_pout`,
+          name: chargerId,
+          color: chargerColors[index % chargerColors.length],
+          unit: "kW",
+          scale: (value) => value / 1000
+        }))
+      }
+    ],
+    [chartChargerIds, voltageDomain]
+  );
 
   return (
     <div className="dashboard-screen grid gap-4">
@@ -200,6 +220,7 @@ export function Dashboard({
                 dropOpenBucket
                 showDots={false}
                 yDomain={panel.yDomain}
+                yAllowDataOverflow={panel.yAllowDataOverflow}
               />
             </div>
           ))}
