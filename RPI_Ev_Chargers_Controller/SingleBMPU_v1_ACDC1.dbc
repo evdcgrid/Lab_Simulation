@@ -1,0 +1,224 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: Master BMPU1
+
+
+BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+ SG_ sync : 0|0@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NewSignal_0043 : 40|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ sync_blank : 0|0@1+ (1,0) [0|0] ""  BMPU1
+
+BO_ 623 N05_RPDO0: 8 Master
+ SG_ N05_itfc_pfc_state_request : 0|8@1+ (1,0) [0|8] ""  BMPU1
+ SG_ N05_itfc_pfc_mode_request : 8|8@1+ (1,0) [0|3] ""  BMPU1
+ SG_ N05_itfc_conf_request : 16|8@1+ (1,0) [0|5] ""  BMPU1
+ SG_ N05_itfc_v2l_frequency_setpoint : 24|8@1+ (1,0) [0|0] "Hz"  BMPU1
+ SG_ N05_itfc_v2l_voltage_setpoint : 32|16@1+ (0.1,0) [0|0] "Vrms"  BMPU1
+ SG_ N05_itfc_output_voltage_setpoint : 48|16@1+ (0.1,0) [0|0] "V"  BMPU1
+
+BO_ 495 N05_TPDO0_BMPU1: 8 BMPU1
+ SG_ N05_SystemState : 0|4@1+ (1,0) [0|0] ""  Master
+ SG_ N05_SystemSubState : 4|4@1+ (1,0) [0|0] ""  Master
+ SG_ N05_SystemDcdcState : 8|3@1+ (1,0) [0|0] ""  Master
+ SG_ N05_SystemMode : 11|2@1+ (1,0) [0|0] ""  Master
+ SG_ N05_SystemConfiguration : 13|3@1+ (1,0) [0|0] ""  Master
+ SG_ N05_CurrentRegulationFlag : 16|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_VoltageRegulationFlag : 17|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_ActivePowerRegulationFlag : 18|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_ReactivePowerRegulationFlag : 19|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_MaxBatteryChargingCurrentFlag : 20|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_MaxBatteryDishargingCurrentFlag : 21|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_SafeCFlag : 22|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_PfcOnFlag : 23|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_DcdcOnFlag : 24|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_InputCurrentLimitationFlag : 25|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_LoadImpedanceLimitationFlag : 26|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_ThermalLimitationFlag : 27|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_GridDetectionFlag : 28|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_unused0 : 29|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_unused1 : 30|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_AggregatedPlusFalg : 31|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_itfc_critical_fault_word : 32|32@1+ (1,0) [0|0] ""  Master
+
+BO_ 879 N05_RPDO1: 8 Master
+ SG_ N05_itfc_i_charge_limit : 0|16@1+ (0.1,0) [0|0] "A"  BMPU1
+ SG_ N05_itfc_i_discharge_limit : 16|16@1+ (0.1,0) [0|0] "A"  BMPU1
+ SG_ N05_itfc_active_power_setpoint_W : 32|16@1- (10,0) [0|0] "W"  BMPU1
+ SG_ N05_itfc_reactive_power_setpoint_VAR : 48|16@1- (10,0) [0|0] "VAR"  BMPU1
+
+BO_ 1135 N05_RPDO2: 6 Master
+ SG_ N05_itfc_i_L1_limit : 0|16@1+ (0.1,0) [0|0] "Arms"  BMPU1
+ SG_ N05_itfc_i_L2_limit : 16|16@1+ (0.1,0) [0|0] "Arms"  BMPU1
+ SG_ N05_itfc_i_L3_limit : 32|16@1+ (0.1,0) [0|0] "Arms"  BMPU1
+
+BO_ 751 N05_TPDO1_BMPU1: 8 BMPU1
+ SG_ N05_itfc_v_batt_max : 0|16@1+ (0.1,0) [0|0] "V"  Master
+ SG_ N05_itfc_i_batt_max : 16|16@1+ (0.1,0) [0|0] "A"  Master
+ SG_ N05_itfc_i_grid_max : 32|16@1+ (0.1,0) [0|0] "Arms"  Master
+ SG_ N05_itfc_P_max : 48|16@1+ (10,0) [0|0] "W"  Master
+
+BO_ 1007 N05_TPDO2_BMPU1: 8 BMPU1
+ SG_ N05_itfc_pos_active_available_power : 0|16@1- (10,0) [0|0] "W"  Master
+ SG_ N05_itfc_neg_active_available_power : 16|16@1- (10,0) [0|0] "W"  Master
+ SG_ N05_itfc_pos_ractive_available_power : 32|16@1- (10,0) [0|0] "VAR"  Master
+ SG_ N05_itfc_neg_ractive_available_power : 48|16@1+ (10,0) [0|0] "VAR"  Master
+
+BO_ 1263 N05_TPDO3_BMPU1: 8 BMPU1
+ SG_ N05_itfc_v_L1mL4_rms : 0|16@1- (0.1,0) [0|0] "Vrms"  Master
+ SG_ N05_itfc_i_L1_rms : 16|16@1- (0.1,0) [0|0] "Arms"  Master
+ SG_ N05_itfc_P_L1 : 32|16@1- (10,0) [0|0] "W"  Master
+ SG_ N05_itfc_Q_L1 : 48|16@1- (10,0) [0|0] "VAR"  Master
+
+BO_ 463 N05_TPDO4_BMPU1: 8 BMPU1
+ SG_ N05_itfc_v_L2mL4_rms : 0|16@1- (0.1,0) [0|0] "Vrms"  Master
+ SG_ N05_itfc_i_L2_rms : 16|16@1- (0.1,0) [0|0] "Arms"  Master
+ SG_ N05_itfc_P_L2 : 32|16@1- (10,0) [0|0] "W"  Master
+ SG_ N05_itfc_Q_L2 : 48|16@1- (10,0) [0|0] "VAR"  Master
+
+BO_ 719 N05_TPDO5_BMPU1: 8 BMPU1
+ SG_ N05_itfc_v_L3mL4_rms : 0|16@1- (0.1,0) [0|0] "Vrms"  Master
+ SG_ N05_itfc_i_L3_rms : 16|16@1- (0.1,0) [0|0] "Arms"  Master
+ SG_ N05_itfc_P_L3 : 32|16@1- (10,0) [0|0] "W"  Master
+ SG_ N05_itfc_Q_L3 : 48|16@1- (10,0) [0|0] "VAR"  Master
+
+BO_ 975 N05_TPDO6_BMPU1: 8 BMPU1
+ SG_ N05_itfc_v_grid : 0|16@1- (0.1,0) [0|0] "Vrms"  Master
+ SG_ N05_itfc_i_grid : 16|16@1- (0.1,0) [0|0] "Arms"  Master
+ SG_ N05_itfc_P_grid : 32|16@1- (10,0) [0|0] "W"  Master
+ SG_ N05_itfc_Q_grid : 48|16@1- (10,0) [0|0] "VAR"  Master
+
+BO_ 1231 N05_TPDO7_BMPU1: 8 BMPU1
+ SG_ N05_itfc_v_batt : 0|16@1+ (0.1,0) [0|0] "Vrms"  Master
+ SG_ N05_itfc_i_batt : 16|16@1+ (0.1,0) [0|0] "A"  Master
+ SG_ N05_itfc_P_batt : 32|16@1+ (10,0) [0|0] "W"  Master
+ SG_ N05_itfc_available_i_batt : 48|16@1+ (10,0) [0|0] "A"  Master
+
+BO_ 1793 N05_Master_Heartbeat: 1 Master
+ SG_ N05_MasterStatus : 0|8@1+ (1,0) [0|0] ""  BMPU1
+
+BO_ 1872 N05_Slave_Heartbeat: 1 BMPU1
+ SG_ N05_SlaveStatus : 0|8@1+ (5,0) [0|0] ""  Master
+
+BO_ 128 N05_Sync_message: 0 Master
+
+BO_ 319 N05_Emergency_BMPU1: 8 BMPU1
+ SG_ N05_ErrorCode : 0|16@1+ (1,0) [0|0] ""  Master
+ SG_ N05_ErrorRegister : 16|8@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_current_L1 : 32|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_current_L2 : 33|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_current_L3 : 34|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_current_L4 : 35|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_voltage_L1 : 36|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_voltage_L2 : 37|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_voltage_L3 : 38|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_voltage_L4 : 39|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_frequency : 40|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Under_frequency : 41|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Anti_Islanding : 42|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_OV_v_bus : 43|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Ov_v_batt : 44|1@1+ (1,0) [0|0] ""  Master
+ SG_ N01_AC_UV_v_batt : 45|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_OC_i_batt : 46|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_Temp_dcdc_prim : 47|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_Temp_dcdc_sec : 48|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_Temp_pfc : 49|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_Temp_transformer : 50|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_Over_Temp_ambient : 51|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_OVRT_disconnection : 52|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_UVRT_disconnection : 53|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_OVP_Aux_LV : 54|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_UVP_Aux_LV : 55|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_emergency_shutdown : 56|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_device_timeout : 57|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_dcdc_pfc_com_loss : 58|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_dcdc_pfc_com_errors : 59|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_chargeP : 60|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_address_selection : 61|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_precharge_failure : 62|1@1+ (1,0) [0|0] ""  Master
+ SG_ N05_OV_Regul_v_batt : 63|1@1+ (1,0) [0|0] ""  Master
+
+
+
+CM_ BO_ 592 "Control frame 1";
+CM_ SG_ 592 itfc_pfc_state_request "State request ";
+CM_ SG_ 592 itfc_pfc_mode_request "Mode request ";
+CM_ SG_ 592 itfc_conf_request "Grid configuration request";
+CM_ SG_ 592 itfc_v2l_frequency_setpoint "Frequency setpoint in Hz for V2L mode ";
+CM_ SG_ 592 itfc_v2l_voltage_setpoint "AC voltage setpopint in Vrms for V2L mode";
+CM_ SG_ 592 itfc_output_voltage_setpoint "Battery side output voltage ";
+CM_ SG_ 384 SystemState "High level state";
+CM_ SG_ 384 SystemSubState "High level substate";
+CM_ SG_ 384 SystemDcdcState "DCDC substate, 0 in multi PU case";
+CM_ SG_ 384 SystemMode "System mode";
+CM_ SG_ 384 SystemConfiguration "Grid configuration";
+CM_ SG_ 384 CurrentRegulationFlag "Set to 1 if PU is limited by max Current";
+CM_ SG_ 384 VoltageRegulationFlag "Set to 1 if PU is limited by max Voltage";
+CM_ SG_ 384 ActivePowerRegulationFlag "Set to 1 if PU is limited by max active Power";
+CM_ SG_ 384 ReactivePowerRegulationFlag "Set to 1 if PU is limited by max reactive Power";
+CM_ SG_ 384 MaxBatteryChargingCurrentFlag "Set to 1 if PU is limited by max charging current";
+CM_ SG_ 384 MaxBatteryDishargingCurrentFlag "Set to 1 if PU is limited by max discharging current";
+CM_ SG_ 384 SafeCFlag "Set to 1 if phase voltages are not within the static voltage range  ";
+CM_ SG_ 384 PfcOnFlag "Set to 1 if PFC is ON";
+CM_ SG_ 384 DcdcOnFlag "Set to 1 if DCDC is ON";
+CM_ SG_ 384 InputCurrentLimitationFlag "Set to 1 if PU is limited by input current";
+CM_ SG_ 384 LoadImpedanceLimitationFlag "Set to 1 if PU is limited by output load impedance  ";
+CM_ SG_ 384 ThermalLimitationFlag "Set to 1 if PU is limited by thermal heating";
+CM_ SG_ 384 GridDetectionFlag "Set to 1 if Grid is detected";
+CM_ SG_ 384 AggregatedPlusFalg "Set to 1 if it is a master Pu in charge of 1 or several distant (slave Pus)";
+CM_ SG_ 384 itfc_critical_fault_word "Fault Word";
+CM_ BO_ 3 "Control frame 2";
+CM_ SG_ 3 itfc_i_charge_limit "DC charging current limit ";
+CM_ SG_ 3 itfc_i_discharge_limit "DC discharging current limit";
+CM_ SG_ 3 itfc_active_power_setpoint_W "Active power setpoint";
+CM_ SG_ 3 itfc_reactive_power_setpoint_VAR "Reactive power setpoint";
+CM_ BO_ 4 "Control frame 3";
+CM_ SG_ 4 itfc_i_L1_limit "Phase L1 current limitation";
+CM_ SG_ 4 itfc_i_L2_limit "Phase L2 current limitation";
+CM_ SG_ 4 itfc_i_L3_limit "Phase L3 current limitation";
+CM_ BO_ 1793 "Master heartbeat to be sent every 1 sec";
+CM_ BO_ 128 "Sync message to trigger TPDO sending from BMPU";
+CM_ BO_ 208 "Emergency frame when BMPU fault or communication stack error";
+VAL_ 592 itfc_pfc_state_request 0 "STATE_INIT" 1 "STATE_STANDBY" 2 "STATE_POWER_ON" 3 "STATE_CHARGE" 4 "STATE_SAFE_D" 5 "Reserved" 6 "STATE_STOPPING" 7 "STATE_LOCK_DSP" 8 "STATE_FAULT_ACK" ;
+VAL_ 592 itfc_pfc_mode_request 0 "MODE_UKNOWN" 1 "MOSE_VSI" 2 "MODE_PFC_POWER" 3 "MODE_PFC_VOLTAGE" ;
+VAL_ 592 itfc_conf_request 0 "CONF_AUTOMATIC_DETECTION" 1 "CONF_SINGLE_PHASE_TWO_WIRE" 2 "CONF_SINGLE_PHASE_FOUR_WIRE" 3 "CONF_THREE_PHASE_THREE_WIRE" 4 "CONF_THREE_PHASE_FOUR_WIRE" ;
+VAL_ 384 SystemState 0 "STATE_INIT" 1 "STATE_STANDBY" 2 "STATE_POWER_ON" 3 "STATE_CHARGE" 4 "STATE_SAFE_D" 5 "Reserved" 6 "STATE_STOPPING" 7 "STATE_LOCK_DSP" 8 "STATE_FAULT_ACK" ;
+VAL_ 384 SystemSubState 0 "SUBSTATE_INIT" 1 "SUBSTATE_STANDBY" 2 "SUBSTATE_PFC_PASSIVE_PRECHARGE" 3 "SUBSTATE_PFC_PASSIVE_PRECHARGE_DRIVER_ON" 4 "SUBSTATE_PFC_ACTIVE_PRECHARGE" 5 "SUBSTATE_PFC_CHARGING" 6 "SUBSTATE_SAFE_C" 7 "SUBSTATE_VSI_ACTIVE_PRECHARGE" 8 "SUBSTATE_VSI_CHARGING" 9 "SUBSTATE_STOPPING" 10 "SUBSTATE_SAFE_D" 11 "SUBSTATE_LOCK_DSP" 12 "SUBSTATE_FAULT_ACK" ;
+VAL_ 384 SystemDcdcState 0 "STATE_DCDC_INIT" 1 "STATE_DCDC_STANDBY" 2 "STATE_DCDC_POWER_ON" 3 "STATE_DCDC_CHARGE" 4 "STATE_DCDC_SAFE_D" 5 "STATE_DCDC_STOPPING" 6 "STATE_DCDC_LOCK_DSP" 7 "STATE_DCDC_FAULT_ACK" ;
+VAL_ 384 SystemMode 0 "MODE_UNKNOWN" 1 "MODE_VSI" 2 "MODE_PFC_POWER" 3 "MODE_PFC_VOLTAGE" ;
+VAL_ 384 SystemConfiguration 0 "CONF_AUTOMATIC_DETECTION" 1 "CONF_SINGLE_PHASE_TWO_WIRE" 2 "CONF_SINGLE_PHASE_FOUR_WIRE" 3 "CONF_THREE_PHASE_THREE_WIRE" 4 "CONF_THREE_PHASE_FOUR_WIRE" ;
+VAL_ 384 itfc_critical_fault_word 1 "Over_current_L1" 2 "Over_current_L2" 4 "Over_current_L3" 8 "Over_current_L4" 16 "Over_voltage_L1" 32 "Over_voltage_L2" 64 "Over_voltage_L3" 128 "Over_voltage_L4" 256 "Over_frequency" 512 "Under_frequency" 1024 "Anti_islanding" 2048 "OV_v_bus" 4096 "Ov_v_batt" 8192 "Uv_v_batt" 16384 "OC_i_batt" 32768 "Over_Temp_dcdc_prim" 65536 "Over_Temp_dcdc_sec" 131072 "Over_Temp_pfc " 262144 "Over_Temp_transformer    " 524288 "Over_Temp_ambient  " 1048576 "OVRT_disconnection         " 2097152 "UVRT_disconnection         " 4194304 "OVP_Aux_LV         " 8388608 "UVP_Aux_LV         " 16777216 "emergency_shutdown    " 33554432 "device_timeout      " 67108864 "dcdc_pfc_com_loss       " 134217728 "dcdc_pfc_com_errors     " 268435456 "chargeP" 536870912 "address_selection" 1073741824 "precharge_failure" -2147483648 "OV_Regul_v_batt" ;
+VAL_ 1793 MasterStatus 0 "Master bootup" 127 "Pre-operational" 4 "Stopped" 5 "Operational " ;
+

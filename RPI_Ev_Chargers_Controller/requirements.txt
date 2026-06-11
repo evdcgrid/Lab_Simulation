@@ -1,0 +1,16 @@
+# Shift2DC - Dependencies
+# CAN bus communication
+python-can>=4.0.0
+cantools>=39.0.0
+
+# ZeroMQ for internal pub/sub
+pyzmq>=25.0.0
+
+# HTTP requests for remote API
+requests>=2.28.0
+
+# GUI (usually included with Python)
+# tkinter is part of standard library, no pip install needed
+
+
+numpy

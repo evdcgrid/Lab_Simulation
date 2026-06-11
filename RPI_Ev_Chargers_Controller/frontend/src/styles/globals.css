@@ -1,0 +1,665 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #080a0d;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(54, 211, 153, 0.08), transparent 26%),
+    linear-gradient(180deg, #080a0d 0%, #0d1014 100%);
+  color: #f4f4f5;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  touch-action: manipulation;
+}
+
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.app-shell {
+  display: flex;
+  height: calc(100vh - 72px);
+  min-height: 0;
+}
+
+.power-slider {
+  width: 100%;
+  accent-color: #36d399;
+}
+
+.power-slider::-webkit-slider-thumb {
+  height: 28px;
+  width: 28px;
+}
+
+.power-slider-indicator {
+  pointer-events: none;
+  touch-action: none;
+}
+
+.charger-power-readout {
+  white-space: nowrap;
+}
+
+.charger-primary-label {
+  margin-bottom: 6px;
+}
+
+.charger-primary-value {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.4rem;
+  line-height: 1;
+}
+
+.charger-primary-unit {
+  line-height: 1.15;
+}
+
+@media (orientation: portrait) {
+  body {
+    overflow: auto;
+  }
+
+  .app-shell {
+    display: block;
+    height: auto;
+    min-height: calc(100vh - 72px);
+  }
+}
+
+@media (orientation: landscape) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .app-root {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .kiosk-header {
+    min-height: 58px;
+    height: 58px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .kiosk-header h1 {
+    font-size: 1.2rem;
+    line-height: 1.3;
+  }
+
+  .kiosk-header button {
+    width: 44px;
+    height: 44px;
+  }
+
+  .app-shell {
+    height: calc(100vh - 58px);
+  }
+
+  .kiosk-main {
+    height: calc(100vh - 58px);
+    overflow: hidden;
+    padding: 10px;
+  }
+
+  .app-shell > nav {
+    width: 66px;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .nav-button {
+    min-height: 48px;
+  }
+
+  .nav-button span {
+    display: none;
+  }
+
+  .dashboard-screen {
+    height: 100%;
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    grid-template-rows: 78px 390px minmax(140px, 1fr);
+    gap: 10px;
+  }
+
+  .dashboard-summary {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 0;
+    gap: 10px;
+  }
+
+  .metric-card {
+    min-height: 0;
+    padding: 8px 12px;
+  }
+
+  .metric-card > div:first-child {
+    font-size: 0.78rem;
+  }
+
+  .metric-card span:first-child {
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  .dashboard-chargers {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 0;
+    gap: 10px;
+    overflow: hidden;
+  }
+
+  .charger-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+    padding: 10px;
+  }
+
+  .charger-card .text-3xl {
+    font-size: 1.55rem;
+    line-height: 1;
+  }
+
+  .charger-primary {
+    margin-top: 8px;
+    gap: 8px;
+  }
+
+  .charger-primary-label {
+    margin-bottom: 8px;
+  }
+
+  .charger-secondary {
+    margin-top: 7px;
+    padding: 7px;
+    gap: 8px;
+  }
+
+  .charger-setpoint {
+    margin-top: 7px;
+    padding: 7px;
+    gap: 8px;
+  }
+
+  .charger-secondary .text-lg,
+  .charger-setpoint .text-lg {
+    font-size: 0.92rem;
+  }
+
+  .charger-power-control {
+    margin-top: 7px;
+    grid-template-columns: 50px minmax(90px, 1fr) 112px 50px 52px;
+    justify-content: start;
+    gap: 7px;
+  }
+
+  .charger-power-control button,
+  .charger-power-control > div {
+    height: 48px;
+  }
+
+  .charger-power-control button svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .charger-power-control .power-slider {
+    min-width: 0;
+  }
+
+  .charger-power-readout {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 0.82rem;
+  }
+
+  .charger-actions {
+    margin-top: auto;
+    padding-top: 8px;
+    gap: 7px;
+  }
+
+  .charger-actions button {
+    height: 42px;
+    font-size: 0.8rem;
+  }
+
+  .dashboard-chart {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    overflow: hidden;
+    padding: 10px 12px;
+  }
+
+  .dashboard-chart-toolbar {
+    margin-bottom: 8px;
+  }
+
+  .dashboard-chart-grid {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .mini-chart {
+    min-height: 0;
+    grid-template-rows: auto minmax(0, 1fr);
+    overflow: hidden;
+  }
+
+  .chart-header {
+    margin-bottom: 4px;
+  }
+
+  .chart-header h2 {
+    font-size: 1rem;
+  }
+
+  .chart-header button {
+    height: 40px;
+    min-height: 40px;
+  }
+
+  .dashboard-side {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    min-height: 0;
+    gap: 10px;
+    overflow: hidden;
+  }
+
+  .event-log {
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    overflow: hidden;
+    padding: 10px;
+  }
+
+  .event-log h2 {
+    font-size: 1rem;
+  }
+
+  .event-list {
+    max-height: none;
+    min-height: 0;
+  }
+
+  .event-item {
+    padding: 8px;
+  }
+
+  .event-item div:last-child {
+    margin-top: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .parameters-screen {
+    height: 100%;
+    min-height: 0;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .parameters-sidebar {
+    min-height: 0;
+    overflow: hidden;
+    padding: 8px;
+  }
+
+  .parameters-sidebar button {
+    height: 48px;
+  }
+
+  .parameters-main {
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .parameter-form {
+    height: 100%;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    gap: 8px;
+    overflow: hidden;
+    padding: 10px;
+  }
+
+  .parameter-form-header {
+    min-height: 42px;
+  }
+
+  .parameter-form-header h2 {
+    font-size: 1.1rem;
+    line-height: 1.1;
+  }
+
+  .parameter-form-header label {
+    min-height: 44px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .parameter-editor {
+    min-height: 0;
+    margin-top: 0;
+    gap: 10px;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .parameter-options {
+    min-height: 0;
+    align-content: start;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: hidden;
+  }
+
+  .parameter-option {
+    min-height: 48px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .parameter-slider-panel {
+    min-height: 0;
+    overflow: hidden;
+    padding: 10px;
+  }
+
+  .parameter-slider-panel .text-4xl {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .parameter-slider-panel .text-lg {
+    line-height: 1.1;
+  }
+
+  .parameter-power {
+    margin-top: 0;
+    padding: 10px;
+  }
+
+  .parameter-power .text-4xl {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .parameter-power .text-2xl {
+    font-size: 1.35rem;
+    line-height: 1.1;
+  }
+
+  .parameter-power-control {
+    margin-top: 10px;
+    grid-template-columns: 48px minmax(0, 1fr) 100px 48px;
+    gap: 8px;
+  }
+
+  .parameter-power-control button,
+  .parameter-power-control > div {
+    height: 48px;
+  }
+
+  .parameter-fields {
+    min-height: 0;
+    align-content: start;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 0;
+  }
+
+  .parameter-field > span {
+    font-size: 0.75rem;
+    line-height: 1.1;
+  }
+
+  .parameter-field-control {
+    margin-top: 5px;
+  }
+
+  .parameter-field-control input,
+  .parameter-field select {
+    height: 48px;
+    font-size: 0.98rem;
+  }
+
+  .parameter-feedback {
+    margin-top: 0;
+    gap: 6px;
+  }
+
+  .parameter-feedback > div {
+    padding: 8px 10px;
+    font-size: 0.82rem;
+  }
+
+  .parameter-apply {
+    height: 48px;
+    margin-top: 0;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 760px) {
+  .dashboard-screen {
+    grid-template-rows: 54px 342px minmax(186px, 1fr);
+    gap: 8px;
+  }
+
+  .dashboard-summary {
+    gap: 8px;
+  }
+
+  .metric-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 6px 10px;
+  }
+
+  .metric-card > div:first-child {
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+
+  .metric-card > div:nth-child(2) {
+    margin-top: 0;
+    gap: 4px;
+  }
+
+  .metric-card span:first-child {
+    font-size: 1.18rem;
+  }
+
+  .metric-card span:last-child {
+    font-size: 0.78rem;
+  }
+
+  .dashboard-chargers {
+    gap: 8px;
+  }
+
+  .charger-card {
+    padding: 8px;
+  }
+
+  .charger-head > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .charger-id {
+    min-width: 2.3rem;
+    font-size: 0.78rem;
+  }
+
+  .charger-status {
+    margin-top: 0;
+  }
+
+  .charger-status span {
+    min-height: 24px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 0.72rem;
+  }
+
+  .charger-primary {
+    margin-top: 6px;
+    gap: 6px;
+  }
+
+  .charger-primary > div,
+  .charger-secondary > div,
+  .charger-setpoint > .grid:first-child > div {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .charger-primary .text-xs,
+  .charger-secondary .text-xs,
+  .charger-setpoint .text-xs {
+    flex: 0 0 auto;
+    font-size: 0.68rem;
+    line-height: 1;
+  }
+
+  .charger-primary .mt-1 {
+    margin-top: 0;
+  }
+
+  .charger-card .text-3xl {
+    font-size: 1.12rem;
+  }
+
+  .charger-primary .text-sm {
+    font-size: 0.68rem;
+  }
+
+  .charger-secondary {
+    margin-top: 5px;
+    padding: 6px;
+  }
+
+  .charger-setpoint {
+    margin-top: 6px;
+    padding: 8px;
+  }
+
+  .charger-secondary .text-lg,
+  .charger-setpoint .text-lg {
+    font-size: 0.78rem;
+  }
+
+  .charger-power-control {
+    margin-top: 7px;
+    grid-template-columns: 46px minmax(80px, 1fr) 116px 46px 48px;
+    gap: 6px;
+  }
+
+  .charger-power-control button,
+  .charger-power-control > div {
+    height: 42px;
+  }
+
+  .charger-power-control svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .charger-power-readout {
+    font-size: 0.86rem;
+  }
+
+  .power-slider::-webkit-slider-thumb {
+    height: 22px;
+    width: 22px;
+  }
+
+  .charger-actions {
+    padding-top: 6px;
+    gap: 6px;
+  }
+
+  .charger-actions button {
+    height: 36px;
+    font-size: 0.72rem;
+  }
+
+  .charger-actions svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .dashboard-chart {
+    padding: 8px 10px;
+  }
+
+  .dashboard-chart-toolbar {
+    margin-bottom: 6px;
+  }
+
+  .chart-header button,
+  .dashboard-chart-toolbar button {
+    height: 34px;
+    min-height: 34px;
+  }
+
+  .mini-chart {
+    min-height: 0;
+    padding: 6px;
+  }
+}
