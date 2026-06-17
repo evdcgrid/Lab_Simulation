@@ -35,10 +35,10 @@ env/
 !.env.example
 
 # Frontend dependencies and build output
-frontend/node_modules/
-frontend/dist/
-frontend/.vite/
-frontend/.eslintcache
+*/node_modules/
+*/dist/
+*/.vite/
+*/.eslintcache
 
 # Logs
 *.log
@@ -48,5 +48,5 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Runtime database sidecars
-backend/data/*.sqlite3-shm
-backend/data/*.sqlite3-wal
+*/data/*.sqlite3-shm
+*/data/*.sqlite3-wal
