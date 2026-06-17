@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import errno
 import signal
 import time
 
@@ -31,6 +32,10 @@ def selected_node_configs(nodes: set[str] | None):
         raise SystemExit(f"Unknown node(s): {', '.join(unknown)}. Known nodes: {', '.join(sorted(known))}")
 
     return [config for config in NODES if config[0] in nodes]
+
+
+def is_missing_can_device(exc: OSError) -> bool:
+    return exc.errno == errno.ENODEV or "No such device" in str(exc)
 
 
 def main() -> None:
@@ -65,22 +70,40 @@ def main() -> None:
     socket = create_publisher()
 
     iface_map = {}
+    unavailable_nodes = []
     for node_name, dbc_file, node_id, _canopen_node_id in node_configs:
-        iface_map[node_name] = CANInterface(dbc_file, node_id)
+        try:
+            iface_map[node_name] = CANInterface(dbc_file, node_id)
+        except OSError as exc:
+            if not is_missing_can_device(exc):
+                raise
+            unavailable_nodes.append(node_name)
+            print(
+                f"⚠️ CAN indisponível para {node_name}: {exc}. "
+                "A HMI/backend continuam ativos, mas este nó ficará sem telemetria."
+            )
 
-    receiver = MessageReceiver(list(iface_map.values()), socket)
-    receiver.start()
+    receiver = None
+    if iface_map:
+        receiver = MessageReceiver(list(iface_map.values()), socket)
+        receiver.start()
+    else:
+        print("⚠️ Nenhuma interface CAN disponível. ZMQ fica ativo para o backend/HMI, mas não haverá telemetria CAN.")
 
     command_server = None
-    if not args.no_command_server:
+    if not args.no_command_server and iface_map:
         command_server = ZmqCommandServer(iface_map, args.command_endpoint)
         command_server.start()
+    elif not args.no_command_server:
+        print("⚠️ Command server não iniciado porque não há nós CAN disponíveis.")
 
-    if not args.no_startup_sequence:
+    if not args.no_startup_sequence and iface_map:
         if "N01" not in iface_map:
             print("⚠️ Startup sequence skipped because N01 is not selected.")
         else:
             MessageSender(iface_map).startup_sequence()
+    elif not args.no_startup_sequence:
+        print("⚠️ Sequência de arranque CAN ignorada porque não há nós CAN disponíveis.")
 
     forwarder = None
     if args.forward_data:
@@ -89,6 +112,8 @@ def main() -> None:
         print("📡 Data forwarder ativo.")
 
     print("✅ ZMQ server/headless publisher running.")
+    if unavailable_nodes:
+        print(f"⚠️ Nós sem CAN: {', '.join(unavailable_nodes)}")
     print(f"📡 Subscribers should connect to {SUB_CONNECT}")
     if command_server:
         print(f"🎛️ HMI commands should connect to {args.command_endpoint.replace('*', '127.0.0.1')}")
